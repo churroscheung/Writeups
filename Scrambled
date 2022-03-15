@@ -32,7 +32,7 @@ decrypted letter. On the other hand, "abbc" doesn't work since two identical enc
 "flag" has four unique characters.
 
 We can even narrow it down to " flag " with spaces on each side since the message will probably have spaces to differentiate words. This means that we're 
-searching for a continuous set of characters that are identiical at the start and end but have unique characters in the middle.
+searching for a continuous set of characters that are identical at the start and end but have unique characters in the middle.
 
 ex: " flag " --> "abcdea"
 
@@ -52,8 +52,8 @@ Candidates: --l----- -- ---- flag --- --l ---- -a - fl--ag- -f--l---a- --aa- ---
 
 There are several candidates but using a little common sense, we can eliminate many of them. The first example has a single character by itself surrounded by spaces and the 
 only possible single letter English word is "a" which makes this candidate extremely improbable. The second example doesn't seem to have any segments that could possibly not
-be words. Compared to the second example, the third example has much longer words(10+ characters) making it extremely unprobably that it is on the right track. In the third
-example, the second word is filled with a combination of letters that can't possibly create an English word, crossing this candidate off for good.
+be words. Compared to the second example, the third example has much longer words(10+ characters) making it extremely unprobable that it is on the right track. Also in the 
+third example, the second word is filled with a combination of letters that can't possibly create an English word, crossing this candidate off for good.
 
 Another observation that can be made is that the only potential solutions with reasonable spacing are the ones which replace "g" with " ". By this reasoning, we can cross
 off any other solution that doesn't follow this rule.
@@ -63,15 +63,15 @@ Repeat the above process several times and you'll end up with a single candidate
 ---ll--- -- --ll ---- --- --- flag -- a ------- ---------g f---- -a------ ----g--- -- ------ -- -- -----a--- --- --- ---- ---- -- ----- -la------- ----- ---- --a- -a------- ...
 
 From this point on it's guess and check. Like the previous process, we can do the decoding by hand, or we can use programming to speed up the process through a Hash Map that
-automatically translates known characters from the cipher into part of the answer. 
+stores the corresponding decrypted character with the encrypted character as the key.
 
-First I assume that the three letter word in front of "flag" is "the" since it makes the most sense in context of an actual sentence.
+First I assume that the three letter word in front of "flag" is "the" since it makes the most sense in context of an actual sentence:
 
 -hell--- -- --ll -e-- --- the flag -- a -e----- ----eth--g f---- ha--e-e- th--gh-- -- ----e- -- -- -e---a--- --t the -e-- -e-e -- -e--- -la-e----- ----t ---- -hat ha--e-e-- ...
 
 Sometimes it's hard to know whether a sequence of letters has multiple potential words or just one. In that case, use a word finder on the internet that lets you search by
 length and contents of that word. For example, "-hat" can't possibly be "that" since we've already designated the "t" character so the only common word that it could possibly
-be is "what".
+be is "what". Here is the next result:
 
 -hell--- -- w-ll -e-- --- the flag -- a -e----- ----eth--g f---- ha--e-e- th--gh-- -- ----e- -- -- -e---a--- --t the -e-- we-e -- we--- -la-e----- ----t ---w what ha--e-e-- ...
 
@@ -80,7 +80,7 @@ be is "what".
 -hell--- -- w-ll -e-- --- the flag -- a -e----- ----eth--g f---- ha--e-e- th--gh-- -- ----e- -- -- -e---ar-- --t the -e-- were -- we-r- -la-e----- ----t ---w what ha--e-e-- ...
 
 "ha--e-e-" turns into "happened" since the sequence appears twice and "happened" is a commonly used word. The encrypted characters also happen to be "11" where "pp" will go
-making it even more likely.
+making it even more likely. Here is the next result:
 
 -hell--- -- w-ll -end --- the flag -n a -e--nd- ----eth-ng f-nn- happened th--gh-- -- p---ed -p -- -e---ard- --t the -e-- were -n we-rd pla-e----- d-n-t -n-w what happened- ...
 
@@ -92,10 +92,10 @@ At this point, the words start to form themselves and it becomes easy to fill in
 
 -hello-- -i will send you the flag in a second- -something funny happened though-- -i picked up my keyboard- but the keys were in weird places---i don't know what happened- ...
 
-We're close to being done but there are still a few gaps left. In front of a standalone "i" is always unknown but standalone "i" is usually printed as "I". This is a combination
-of first the "shift key" and then a "i" explaining the empty character in front which is a "shift key". The rest of the empty characters are punctuation marks which add 
-nothing to understanding the message so we can ignore them. There's also a whole string of characters that are still unknown, but this is just the string of "r" which is 
-meaningless and only messes with the frequency analysis.
+We're close to being done but there are still a few gaps left. The character in front of a standalone "i" is always unknown but standalone "i" is usually printed as "I". 
+This is a combination of first the "shift key" and then a "i" which explains the empty character in front which is a "shift key". The rest of the empty characters are
+punctuation marks which add nothing to understanding the message so we can ignore them. There's also a whole string of characters that are still unknown, but this is just 
+the string of "r" which is meaningless and only messes with the frequency analysis.
 
 Near the end we get this:
 
@@ -105,7 +105,7 @@ After:   here is the flag --hopefully---- utflag---sub-sti-tu-t-io-n--c-i-ph-er-
 This message looks like it had the flag wrapped which is lucky for us. All we have to do is find where the flag starts and ends.
 
 We can do a frequency analysis right now on the encrypted text and we find that "z" only appears once, and "]" also only appears once. This means that they are both probably 
-"{" and "}" respectively which wraps the flag neatly.
+"{" and "}" respectively which wraps the flag neatly. This is the resulting message:
 
 here is the flag --hopefully---- utflag{-sub-sti-tu-t-io-n--c-i-ph-er---i--h-ar-d-ly--k-no-w--h-er}-
 
