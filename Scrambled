@@ -1,0 +1,43 @@
+# UTCTF – Scrambled
+
+* **Category:** Cryptography
+* **Points:** 937
+
+## Challenge
+
+I dropped my friend's keyboard and all the key caps fell off. I didn't want them to find out what happened, so I put the key caps 
+back on in random places... Good news: My friend only looks at the keyboard when they type, so they didn't notice that they were 
+typing absolute gibberish. Bad news: They were supposed to send me a flag, but instead I got... this... Can you help me figure out 
+it was supposed to be? By oops (@oops on discord)
+
+a[qjj7ahga2gc2jjg=qf/g.7xgm[qgpjo,g2fgog=q87f/tga=7vqm[2f,gpxff.g[o11qfq/gm[7x,[ahga2g1286q/gx1gv.g6q.n7ou/bgnxmgm[qg6q.=gcquqg2fgcq2u/g1jo8q=t3a2g/7f4mg6f7cgc[omg[o11qfq/bgnxmg2m4=g76o.g=2f8qga2g=mouqgomgm[qg6q.n7ou/gof.co.=galay33aoj=7ga24-qg[o/gog8ux=[g7fg.7xgp7ug.qou=bg/7g.7xgcofmgm7g,7g7xmgc2m[gvqa0rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr3aof.co.=bg[quqg2=gm[qgpjo,gai[71qpxjj.ayalgxmpjo,aza=xna=m2amxama27afa58a2a1[aqua5a2a5[aoua/aj.a56af7aca5[aqua]3
+
+
+## Solution
+
+From the description it sounds like every key on the keyboard corresponds to a unique character.
+
+We could do a frequency analysis and then replace the most frequent letters with the most popular English characters, but there would be too much trial and error involved. The problem could also intentionally have a ton of uncommon letters such as "z" to throw the reader off (like what they did with "r").
+
+Instead we can opt to search for a pattern of letters since the cipher is every letter is guaranteed to have a unique button. Since the description states that the message is about flags and most definitely contains the word flag, we can search for a pattern of letters that matches "flag".
+
+For example, the set of encrypted letters "abcd" might correspond to the decrypted word "flag" since all the encrypted letters correspond to a single, unique decrypted letter. On the other hand, "abbc" doesn't work since two identical encrypted characters guarantees two identical decrypted characters and the word "flag" has four unique characters.
+
+We can even narrow it down to " flag " with spaces on each side since the message will probably have spaces to differentiate words. This means that we're searching for a continuous set of characters that are identiical at the start and end but have unique characters in the middle.
+
+ex: " flag " --> "abcdea"
+
+
+The next part can be done by hand but it's much more efficient and safer to do it through programming. It's a simple programming problem where you check each substring of length 6 in the ciphertext and see if it matches the desired pattern. 
+
+After this, you obtain multiple candidates. "-" means unknown while I went ahead and replaced the encrypted charcters with their potential decrypted counterparts that create the pattern " flag " at some point.
+
+---ll--- -- --ll ---- --- --- flag -- a ------- ---------g f---- -a------ ----g--- -- ------ -- -- -----a--- --- --- ---- ---- -- ----- -la------- ----- ---- --a- -a------- --- ---- --a- ----- -- --a-- a- --- -----a-- a---a-- -------al-- ----- -a- a ----- -- --- f-- --a--- -- --- -a-- -- g- --- ---- ----------------------------------------------------------------------------a---a--- ---- -- --- flag ------f-ll----- --flag---------------------------------------a----l------------------
+
+--------l--l----l-- -l--gl---la--fl- l-l---- --l-------- flag  -l----- --l---gf---l--l------lg-l--l---------l-g-l---l----l----l- l-----l----------l-- --l- --l----l----- ---l-g-l----l----l-- --l--l-----l--l---l--------l- -----l-----------l-----l---l-l--g--l- l--gla--l------l--l--gl-- -l--lf-l-g-l----l----------------------------------------------------------------------------- ------l----l--l---la--fl------ag-------lg-a--f----g-------g------ ------------------------------ ------------
+
+(not all are shown)
+
+There are several candidates but using a little common sense, we can eliminate many of them.
+
+'utflag{SubStiTuTIoN_cIPhEr_I_hArDLy_kNoW_hEr}'
